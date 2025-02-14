@@ -25,5 +25,63 @@ const reviews = [
 /////////////////////////////////////////////////////////////////////
 
 //1. Append the reviews to the DOM
+const Review = ({ username, image, star, review }) => {
+  return (
+    <div className="review_container">
+      <img src={image} alt={username} />
+      <div>
+        <h3>{username}</h3>
+        <p> {star}</p>
+        <p>{review}</p>
+      </div>
+    </div>
+  );
+};
 
+const ReviewList = ({ reviews }) => {
+  return (
+    <div className="reviews">
+      {reviews.map((item, index) => (
+        <Review
+          key={index}
+          username={item.username}
+          star={item.star}
+          review={item.review}
+          image={item.image}
+        />
+      ))}
+    </div>
+  );
+};
 //2. Append new reviews to the DOM from the form
+const addReview = (event) => {
+  event.preventDefault();
+  const username = event.target.username.value;
+  const star = parseInt(event.target.star.value);
+  const reviewText = event.target.review.value;
+
+  if (!username || !star || !reviewText) return;
+
+  const newReview = {
+    username,
+    image: "./images/avatar1.png", 
+    star,
+    review: reviewText,
+  };
+
+  reviews.push(newReview);
+  renderReviews();
+  event.target.reset();
+};
+
+// Render Reviews
+const renderReviews = () => {
+  const root = document.getElementById("review-root");
+  ReactDOM.render(<ReviewList reviews={reviews} />, root);
+};
+
+// Initialize render
+document.addEventListener("DOMContentLoaded", () => {
+  renderReviews();
+  document.getElementById("review-form").addEventListener("submit", addReview);
+});
